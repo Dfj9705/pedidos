@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->decimal('qty', 14, 4);
             $table->decimal('unit_cost', 14, 4)->default(0);
             $table->timestamps();
-            $table->unique(['inventory_movement_id', 'product_id']);
+            $table->unique(['inventory_movement_id', 'product_id'], 'inv_mov_prod_uq');
         });
     }
 
