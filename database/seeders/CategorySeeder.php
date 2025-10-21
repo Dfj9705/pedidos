@@ -16,6 +16,6 @@ class CategorySeeder extends Seeder
 
         foreach ($names as $name) {
             \App\Models\Category::create(['name' => $name]);
-        }a
+        }
     }
 }

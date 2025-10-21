@@ -12,13 +12,34 @@ return new class extends Migration {
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('sku', 64)->unique();
-            $table->string('name', 180);
-            $table->text('description')->nullable();
-            $table->decimal('cost', 14, 4)->default(0);
-            $table->decimal('price', 14, 4)->default(0);
+
+            // Relaciones con catálogos
+            $table->foreignId('brand_id')
+                ->nullable()
+                ->constrained('brands')
+                ->nullOnDelete();
+
+            $table->foreignId('category_id')
+                ->nullable()
+                ->constrained('categories')
+                ->nullOnDelete();
+
+            // Datos básicos del producto
+            $table->string('sku', 60)->unique();         // código interno o de fábrica
+            $table->string('name', 180);                 // nombre del producto
+            $table->text('description')->nullable();     // descripción opcional
+
+            // Información económica
+            $table->decimal('cost', 14, 4)->default(0);  // costo unitario
+            $table->decimal('price', 14, 4)->default(0); // precio de venta
+            $table->decimal('min_stock', 14, 4)->default(0); // mínimo en inventario
+
+            // Estado del producto
             $table->boolean('is_active')->default(true);
+
             $table->timestamps();
+
+            // Índices de búsqueda rápida
             $table->index(['name', 'sku']);
         });
     }
