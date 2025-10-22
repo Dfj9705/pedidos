@@ -7,59 +7,40 @@ use Illuminate\Http\Request;
 
 class StockController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
-    }
+        $query = Stock::query()
+            ->with([
+                'product:id,sku,name',
+                'warehouse:id,name,code',
+            ]);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        if ($request->filled('warehouse_id')) {
+            $query->where('warehouse_id', (int) $request->input('warehouse_id'));
+        }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $search = trim((string) $request->input('q', ''));
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Stock $stock)
-    {
-        //
-    }
+        if ($search !== '') {
+            $query->whereHas('product', function ($builder) use ($search) {
+                $builder->where('sku', 'like', "%{$search}%")
+                    ->orWhere('name', 'like', "%{$search}%");
+            });
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Stock $stock)
-    {
-        //
-    }
+        $stocks = $query
+            ->orderBy('product_id')
+            ->orderBy('warehouse_id')
+            ->get();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Stock $stock)
-    {
-        //
-    }
+        if ($request->expectsJson()) {
+            return response()->json([
+                'stocks' => $stocks,
+            ]);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Stock $stock)
-    {
-        //
+        return view('stocks.index', [
+            'stocks' => $stocks,
+        ]);
     }
 }
