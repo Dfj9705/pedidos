@@ -69,7 +69,7 @@
                 </tr>
               </thead>
               <tbody data-order-items>
-                <tr class="text-muted">
+                <tr data-empty-row class="text-muted">
                   <td colspan="6" class="text-center py-4">Agrega productos para calcular los totales del pedido.</td>
                 </tr>
               </tbody>
@@ -80,7 +80,9 @@
         <div class="modal-footer justify-content-between">
           <div class="text-end">
             <div class="fw-semibold">Resumen</div>
-            <div class="small text-muted">Los totales se actualizarán al guardar el pedido.</div>
+            <div class="small text-muted">Subtotal: <span data-order-subtotal>0.0000</span></div>
+            <div class="small text-muted">Descuento: <span data-order-discount>0.0000</span></div>
+            <div class="fw-semibold">Total: <span data-order-grand>0.0000</span></div>
           </div>
           <button type="submit" class="btn btn-success">
             <span id="spinnerSaveOrder" class="spinner-border spinner-border-sm me-2 d-none"></span>

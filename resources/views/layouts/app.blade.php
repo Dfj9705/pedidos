@@ -65,6 +65,30 @@
                                     <span>{{ __('Marcas') }}</span>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a @class(['nav-link', 'active' => request()->routeIs('products.*')]) href="{{ route('products.index') }}">
+                                    <i class="bi bi-box"></i>
+                                    <span>{{ __('Productos') }}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a @class(['nav-link', 'active' => request()->routeIs('stocks.*')]) href="{{ route('stocks.index') }}">
+                                    <i class="bi bi-stack"></i>
+                                    <span>{{ __('Existencias') }}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a @class(['nav-link', 'active' => request()->routeIs('inventory-movements.*')]) href="{{ route('inventory-movements.index') }}">
+                                    <i class="bi bi-arrow-left-right"></i>
+                                    <span>{{ __('Movimientos') }}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a @class(['nav-link', 'active' => request()->routeIs('orders.*')]) href="{{ route('orders.index') }}">
+                                    <i class="bi bi-bag-check"></i>
+                                    <span>{{ __('Pedidos') }}</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 @endauth
