@@ -18,96 +18,124 @@
     @stack('scripts')
 </head>
 <body class="app-body @yield('body-class')">
-    <div id="app" class="d-flex flex-column min-vh-100">
-        <nav class="navbar navbar-expand-md navbar-dark shadow-sm app-navbar">
-            <div class="container">
-                <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
-                    <i class="bi bi-bag-heart-fill me-2 fs-4"></i>
-                    <span class="fw-semibold">{{ config('app.name', 'Laravel') }}</span>
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+    <div id="app" class="app-shell d-flex min-vh-100">
+        <aside class="app-sidebar">
+            <div class="app-sidebar-content d-flex flex-column h-100">
+                <div class="app-sidebar-header d-flex align-items-center justify-content-between">
+                    <a class="app-brand d-flex align-items-center text-decoration-none" href="{{ url('/') }}">
+                        <i class="bi bi-bag-heart-fill me-2 fs-4"></i>
+                        <span class="fw-semibold">{{ config('app.name', 'Laravel') }}</span>
+                    </a>
+                    <button class="btn btn-outline-light btn-sm d-md-none" type="button" data-sidebar-toggle aria-label="{{ __('Cerrar navegación') }}">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-                        @auth
+                @auth
+                    <div class="app-sidebar-menu mt-4">
+                        <p class="app-sidebar-section-title mb-3">{{ __('Navegación') }}</p>
+                        <ul class="nav flex-column">
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('categories.index') }}">
-                                    <i class="bi bi-bookmarks me-1"></i> Categorías
+                                <a @class(['nav-link', 'active' => request()->routeIs('home')]) href="{{ route('home') }}">
+                                    <i class="bi bi-speedometer2"></i>
+                                    <span>{{ __('Panel') }}</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('customers.index') }}">
-                                    <i class="bi bi-speedometer2 me-1"></i> Clientes
+                                <a @class(['nav-link', 'active' => request()->routeIs('categories.*')]) href="{{ route('categories.index') }}">
+                                    <i class="bi bi-journals"></i>
+                                    <span>{{ __('Categorías') }}</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('home') }}">
-                                    <i class="bi bi-speedometer2 me-1"></i> Panel
+                                <a @class(['nav-link', 'active' => request()->routeIs('customers.*')]) href="{{ route('customers.index') }}">
+                                    <i class="bi bi-people"></i>
+                                    <span>{{ __('Clientes') }}</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('warehouses.index') }}">
-                                    <i class="bi bi-building me-1"></i> Almacenes
+                                <a @class(['nav-link', 'active' => request()->routeIs('warehouses.*')]) href="{{ route('warehouses.index') }}">
+                                    <i class="bi bi-box-seam"></i>
+                                    <span>{{ __('Almacenes') }}</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('brands.index') }}">
-                                    <i class="bi bi-award me-1"></i> Marcas
+                                <a @class(['nav-link', 'active' => request()->routeIs('brands.*')]) href="{{ route('brands.index') }}">
+                                    <i class="bi bi-award"></i>
+                                    <span>{{ __('Marcas') }}</span>
                                 </a>
                             </li>
-                        @endauth
-                    </ul>
+                        </ul>
+                    </div>
+                @endauth
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto align-items-md-center">
-                        <!-- Authentication Links -->
-                        @guest
+                <div class="app-sidebar-footer mt-auto">
+                    @guest
+                        <p class="app-sidebar-section-title mb-3">{{ __('Cuenta') }}</p>
+                        <ul class="nav flex-column">
                             @if (Route::has('login'))
                                 <li class="nav-item">
-                                    <a class="nav-link d-flex align-items-center" href="{{ route('login') }}">
-                                        <i class="bi bi-box-arrow-in-right me-1"></i> {{ __('Login') }}
+                                    <a class="nav-link" href="{{ route('login') }}">
+                                        <i class="bi bi-box-arrow-in-right"></i>
+                                        <span>{{ __('Login') }}</span>
                                     </a>
                                 </li>
                             @endif
 
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link d-flex align-items-center" href="{{ route('register') }}">
-                                        <i class="bi bi-person-plus me-1"></i> {{ __('Register') }}
+                                    <a class="nav-link" href="{{ route('register') }}">
+                                        <i class="bi bi-person-plus"></i>
+                                        <span>{{ __('Register') }}</span>
                                     </a>
                                 </li>
                             @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    <i class="bi bi-person-circle me-1"></i> {{ Auth::user()->name }}
-                                </a>
+                        </ul>
+                    @else
+                        <div class="app-sidebar-user">
+                            <div class="app-sidebar-avatar">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <p class="user-name mb-0">{{ Auth::user()->name }}</p>
+                                @if (Auth::user()->email)
+                                    <p class="user-email mb-0">{{ Auth::user()->email }}</p>
+                                @endif
+                            </div>
+                        </div>
+                        <a class="app-sidebar-logout" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span>{{ __('Logout') }}</span>
+                        </a>
 
-                                <div class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        <i class="bi bi-box-arrow-right text-primary"></i> {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                    @endguest
                 </div>
             </div>
-        </nav>
+        </aside>
 
-        <main class="app-main flex-grow-1 @yield('main-class', 'py-4')">
-            @yield('content')
-        </main>
+        <div class="app-sidebar-backdrop d-md-none" data-sidebar-close></div>
+
+        <div class="app-content flex-grow-1 d-flex flex-column">
+            <header class="app-topbar d-md-none">
+                <div class="d-flex align-items-center justify-content-between">
+                    <button class="btn btn-outline-primary" type="button" data-sidebar-toggle aria-label="{{ __('Abrir navegación') }}">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <a class="app-topbar-brand d-flex align-items-center text-decoration-none" href="{{ url('/') }}">
+                        <i class="bi bi-bag-heart-fill me-2 text-primary fs-5"></i>
+                        <span class="fw-semibold">{{ config('app.name', 'Laravel') }}</span>
+                    </a>
+                    <span class="app-topbar-placeholder"></span>
+                </div>
+            </header>
+
+            <main class="app-main flex-grow-1 @yield('main-class', 'py-4')">
+                @yield('content')
+            </main>
+        </div>
     </div>
 </body>
 </html>
