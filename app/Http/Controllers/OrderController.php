@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\OrderStoreRequest;
 use App\Http\Requests\OrderUpdateRequest;
+use App\Models\Customer;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +34,37 @@ class OrderController extends Controller
                 ])
                 ->values();
 
-            return response()->json(['orders' => $orders]);
+            $customers = Customer::query()
+                ->select(['id', 'name'])
+                ->orderBy('name')
+                ->get()
+                ->map(fn (Customer $customer) => [
+                    'id' => $customer->id,
+                    'name' => $customer->name,
+                ])->values();
+
+            $products = Product::query()
+                ->select(['id', 'name', 'sku', 'price', 'is_active'])
+                ->orderBy('name')
+                ->get()
+                ->map(function (Product $product) {
+                    $label = trim($product->sku ? $product->sku . ' - ' . $product->name : $product->name);
+
+                    return [
+                        'id' => $product->id,
+                        'name' => $product->name,
+                        'sku' => $product->sku,
+                        'price' => $this->formatDecimal($product->price),
+                        'is_active' => (bool) $product->is_active,
+                        'label' => $label,
+                    ];
+                })->values();
+
+            return response()->json([
+                'orders' => $orders,
+                'customers' => $customers,
+                'products' => $products,
+            ]);
         }
 
         return view('orders.index');
