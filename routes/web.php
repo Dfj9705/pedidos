@@ -3,6 +3,7 @@
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\InventoryMovementController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
@@ -31,4 +32,5 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('warehouses', WarehouseController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('brands', BrandController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('stocks', StockController::class)->only(['index']);
+    Route::resource('inventory-movements', InventoryMovementController::class)->only(['index', 'store', 'show', 'destroy']);
 });
