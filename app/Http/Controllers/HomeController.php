@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Customer;
+use App\Models\Product;
 
 class HomeController extends Controller
 {
@@ -18,11 +21,16 @@ class HomeController extends Controller
 
     /**
      * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
     {
-        return view('home');
+        $totals = [
+            'categories' => Category::count(),
+            'brands' => Brand::count(),
+            'products' => Product::count(),
+            'customers' => Customer::count(),
+        ];
+
+        return view('home', compact('totals'));
     }
 }
