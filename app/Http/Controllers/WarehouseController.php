@@ -4,23 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class WarehouseController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-    }
+        if ($request->expectsJson()) {
+            return response()->json([
+                'warehouses' => Warehouse::orderByDesc('id')->get(),
+            ], 200);
+        }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return view('warehouses.index');
     }
 
     /**
@@ -28,23 +27,20 @@ class WarehouseController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:120'],
+            'code' => ['required', 'string', 'max:40', 'unique:warehouses,code'],
+            'is_route' => ['nullable', 'boolean'],
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Warehouse $warehouse)
-    {
-        //
-    }
+        $data['is_route'] = $request->boolean('is_route');
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Warehouse $warehouse)
-    {
-        //
+        $warehouse = Warehouse::create($data);
+
+        return response()->json([
+            'message' => 'Almacén creado',
+            'warehouse' => $warehouse,
+        ], 200);
     }
 
     /**
@@ -52,7 +48,25 @@ class WarehouseController extends Controller
      */
     public function update(Request $request, Warehouse $warehouse)
     {
-        //
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:120'],
+            'code' => [
+                'required',
+                'string',
+                'max:40',
+                Rule::unique('warehouses', 'code')->ignore($warehouse->id),
+            ],
+            'is_route' => ['nullable', 'boolean'],
+        ]);
+
+        $data['is_route'] = $request->boolean('is_route');
+
+        $warehouse->update($data);
+
+        return response()->json([
+            'message' => 'Almacén actualizado',
+            'warehouse' => $warehouse,
+        ], 200);
     }
 
     /**
@@ -60,6 +74,10 @@ class WarehouseController extends Controller
      */
     public function destroy(Warehouse $warehouse)
     {
-        //
+        $warehouse->delete();
+
+        return response()->json([
+            'message' => 'Almacén eliminado',
+        ], 200);
     }
 }

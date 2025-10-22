@@ -4,23 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-    }
+        if ($request->expectsJson()) {
+            return response()->json([
+                'customers' => Customer::orderByDesc('id')->get(),
+            ], 200);
+        }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return view('customers.index');
     }
 
     /**
@@ -28,23 +27,19 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:160'],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'address' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'string', 'email', 'max:120', 'unique:customers,email'],
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Customer $customer)
-    {
-        //
-    }
+        $customer = Customer::create($data);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Customer $customer)
-    {
-        //
+        return response()->json([
+            'message' => 'Cliente creado',
+            'customer' => $customer,
+        ], 200);
     }
 
     /**
@@ -52,7 +47,25 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        //
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:160'],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'address' => ['nullable', 'string', 'max:255'],
+            'email' => [
+                'nullable',
+                'string',
+                'email',
+                'max:120',
+                Rule::unique('customers', 'email')->ignore($customer->id),
+            ],
+        ]);
+
+        $customer->update($data);
+
+        return response()->json([
+            'message' => 'Cliente actualizado',
+            'customer' => $customer,
+        ], 200);
     }
 
     /**
@@ -60,6 +73,10 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        //
+        $customer->delete();
+
+        return response()->json([
+            'message' => 'Cliente eliminado',
+        ], 200);
     }
 }
