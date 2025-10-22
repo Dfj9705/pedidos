@@ -35,20 +35,23 @@ aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('
                     <ul class="navbar-nav me-auto">
                         @auth
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('categories.index') }}">Categorías</a>
+                                <a class="nav-link" href="{{ route('categories.index') }}">
+                                    <i class="bi bi-bookmarks me-1"></i> Categorías
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('customers.index') }}">Clientes</a>
+                                <a class="nav-link" href="{{ route('customers.index') }}">
+                                    <i class="bi bi-speedometer2 me-1"></i> Clientes
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('warehouses.index') }}">Almacenes</a>
                                 <a class="nav-link" href="{{ route('home') }}">
                                     <i class="bi bi-speedometer2 me-1"></i> Panel
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('categories.index') }}">
-                                    <i class="bi bi-tags me-1"></i> Categorías
+                                <a class="nav-link" href="{{ route('warehouses.index') }}">
+                                    <i class="bi bi-building me-1"></i> Almacenes
                                 </a>
                             </li>
                             <li class="nav-item">
