@@ -35,6 +35,13 @@ aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('
                     <ul class="navbar-nav me-auto">
                         @auth
                             <li class="nav-item">
+                                <a class="nav-link" href="{{ route('categories.index') }}">Categorías</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('customers.index') }}">Clientes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('warehouses.index') }}">Almacenes</a>
                                 <a class="nav-link" href="{{ route('home') }}">
                                     <i class="bi bi-speedometer2 me-1"></i> Panel
                                 </a>

@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Warehouse extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'code',
+        'is_route',
+    ];
+
+    protected $casts = [
+        'is_route' => 'boolean',
+    ];
 }
