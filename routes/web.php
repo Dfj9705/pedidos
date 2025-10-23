@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InventoryMovementController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderDeliveryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\WarehouseController;
@@ -37,4 +38,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('stocks', StockController::class)->only(['index']);
     Route::resource('inventory-movements', InventoryMovementController::class)->only(['index', 'store', 'show', 'destroy']);
     Route::resource('orders', OrderController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
+    Route::post('/orders/{order}/deliver', [OrderDeliveryController::class, 'deliver'])
+        ->name('orders.deliver');
 });
