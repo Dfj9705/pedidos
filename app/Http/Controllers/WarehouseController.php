@@ -31,6 +31,8 @@ class WarehouseController extends Controller
             'name' => ['required', 'string', 'max:120'],
             'code' => ['required', 'string', 'max:40', 'unique:warehouses,code'],
             'is_route' => ['nullable', 'boolean'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
         ]);
 
         $data['is_route'] = $request->boolean('is_route');
@@ -57,6 +59,8 @@ class WarehouseController extends Controller
                 Rule::unique('warehouses', 'code')->ignore($warehouse->id),
             ],
             'is_route' => ['nullable', 'boolean'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
         ]);
 
         $data['is_route'] = $request->boolean('is_route');

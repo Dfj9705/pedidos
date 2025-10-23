@@ -41,6 +41,16 @@
               <textarea id="address" name="address" class="form-control" rows="3"></textarea>
               <div id="addressFeedback" class="invalid-feedback"></div>
             </div>
+            <div class="col-md-6">
+              <label for="latitude" class="form-label">Latitud</label>
+              <input id="latitude" name="latitude" type="number" step="0.000001" class="form-control" autocomplete="off">
+              <div id="latitudeFeedback" class="invalid-feedback"></div>
+            </div>
+            <div class="col-md-6">
+              <label for="longitude" class="form-label">Longitud</label>
+              <input id="longitude" name="longitude" type="number" step="0.000001" class="form-control" autocomplete="off">
+              <div id="longitudeFeedback" class="invalid-feedback"></div>
+            </div>
           </div>
         </div>
 

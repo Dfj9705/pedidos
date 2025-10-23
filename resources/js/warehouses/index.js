@@ -19,6 +19,8 @@ const spinnerSave = document.getElementById('spinnerSaveWarehouse')
 const inputName = document.getElementById('name')
 const inputCode = document.getElementById('code')
 const inputIsRoute = document.getElementById('is_route')
+const inputLatitude = document.getElementById('latitude')
+const inputLongitude = document.getElementById('longitude')
 
 btnUpdate.style.display = 'none'
 btnUpdate.disabled = true
@@ -54,7 +56,7 @@ const dt = new DataTable('#warehouseTable', {
             className: 'text-center',
             render: (id, type, row) => `
         <div class="btn-group" role="group">
-          <button class="btn btn-sm btn-warning btn-edit" data-id="${id}" data-name="${encodeURIComponent(row.name ?? '')}" data-code="${encodeURIComponent(row.code ?? '')}" data-is-route="${row.is_route ? 1 : 0}" data-bs-toggle="modal" data-bs-target="#modalWarehouse">
+          <button class="btn btn-sm btn-warning btn-edit" data-id="${id}" data-name="${encodeURIComponent(row.name ?? '')}" data-code="${encodeURIComponent(row.code ?? '')}" data-is-route="${row.is_route ? 1 : 0}" data-latitude="${encodeURIComponent(row.latitude ?? '')}" data-longitude="${encodeURIComponent(row.longitude ?? '')}" data-bs-toggle="modal" data-bs-target="#modalWarehouse">
             <i class="bi bi-pencil"></i>
           </button>
           <button class="btn btn-sm btn-danger btn-delete" data-id="${id}">
@@ -159,6 +161,8 @@ function setCreateState() {
     clearValidation()
     formWarehouse.reset()
     inputIsRoute.checked = false
+    if (inputLatitude) inputLatitude.value = ''
+    if (inputLongitude) inputLongitude.value = ''
 }
 
 function editWarehouse(e) {
@@ -176,6 +180,8 @@ function editWarehouse(e) {
     inputName.value = decodeURIComponent(btn.dataset.name || '')
     inputCode.value = decodeURIComponent(btn.dataset.code || '')
     inputIsRoute.checked = btn.dataset.isRoute === '1'
+    inputLatitude.value = decodeURIComponent(btn.dataset.latitude || '')
+    inputLongitude.value = decodeURIComponent(btn.dataset.longitude || '')
 }
 
 async function updateWarehouse(e) {

@@ -13,9 +13,13 @@ class Warehouse extends Model
         'name',
         'code',
         'is_route',
+        'latitude',
+        'longitude',
     ];
 
     protected $casts = [
         'is_route' => 'boolean',
+        'latitude' => 'decimal:7',
+        'longitude' => 'decimal:7',
     ];
 }

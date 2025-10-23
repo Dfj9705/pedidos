@@ -13,8 +13,22 @@
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
+    <!-- Leaflet -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4rjqfVkkA1F+QL1YapMI2bA38nSg9r5t7G6sgxZ1lk="
+        crossorigin=""
+    >
+
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-o9N1j7kGStbKyGg7tPIIFneS3DRgkqYzyBbs6k74Uyk="
+        crossorigin=""
+        defer
+    ></script>
     @stack('scripts')
 </head>
 <body class="app-body @yield('body-class')">
