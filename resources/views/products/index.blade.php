@@ -66,17 +66,17 @@
             </div>
             <div class="col-md-4">
               <label for="productCost" class="form-label">Costo</label>
-              <input id="productCost" name="cost" type="number" step="0.0001" min="0" class="form-control text-end">
+              <input id="productCost" name="cost" type="number" step="1" min="0" class="form-control text-end">
               <div id="productCostFeedback" class="invalid-feedback"></div>
             </div>
             <div class="col-md-4">
               <label for="productPrice" class="form-label">Precio</label>
-              <input id="productPrice" name="price" type="number" step="0.0001" min="0" class="form-control text-end">
+              <input id="productPrice" name="price" type="number" step="1" min="0" class="form-control text-end">
               <div id="productPriceFeedback" class="invalid-feedback"></div>
             </div>
             <div class="col-md-4">
               <label for="productMinStock" class="form-label">Stock mínimo</label>
-              <input id="productMinStock" name="min_stock" type="number" step="0.0001" min="0" class="form-control text-end">
+              <input id="productMinStock" name="min_stock" type="number" step="1" min="0" class="form-control text-end">
               <div id="productMinStockFeedback" class="invalid-feedback"></div>
             </div>
             <div class="col-12">

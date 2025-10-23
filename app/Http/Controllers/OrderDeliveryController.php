@@ -33,6 +33,12 @@ class OrderDeliveryController extends Controller
             ]);
         }
 
+        if ($order->payment_status !== 'paid') {
+            throw ValidationException::withMessages([
+                'order' => ['El pedido debe estar pagado antes de entregarse.'],
+            ]);
+        }
+
         if (! in_array($order->status, ['confirmed', 'shipped'], true)) {
             throw ValidationException::withMessages([
                 'order' => ['El pedido no puede ser marcado como entregado.'],
