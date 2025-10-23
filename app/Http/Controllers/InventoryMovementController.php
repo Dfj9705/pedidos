@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\InventoryMovement;
 use App\Models\InventoryMovementDetail;
+use App\Models\Product;
+use App\Models\Warehouse;
 use App\Services\StockService;
+use DomainException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -39,7 +42,43 @@ class InventoryMovementController extends Controller
                     ];
                 });
 
-            return response()->json(['data' => $movements]);
+            $warehouses = Warehouse::query()
+                ->select(['id', 'name', 'code'])
+                ->orderBy('name')
+                ->get()
+                ->map(function (Warehouse $warehouse) {
+                    $label = trim($warehouse->code ? $warehouse->code . ' - ' . $warehouse->name : $warehouse->name);
+
+                    return [
+                        'id' => $warehouse->id,
+                        'name' => $warehouse->name,
+                        'code' => $warehouse->code,
+                        'label' => $label,
+                    ];
+                });
+
+            $products = Product::query()
+                ->select(['id', 'name', 'sku', 'cost', 'is_active'])
+                ->orderBy('name')
+                ->get()
+                ->map(function (Product $product) {
+                    $label = trim($product->sku ? $product->sku . ' - ' . $product->name : $product->name);
+
+                    return [
+                        'id' => $product->id,
+                        'name' => $product->name,
+                        'sku' => $product->sku,
+                        'cost' => number_format((float) $product->cost, 4, '.', ''),
+                        'is_active' => (bool) $product->is_active,
+                        'label' => $label,
+                    ];
+                });
+
+            return response()->json([
+                'data' => $movements,
+                'warehouses' => $warehouses,
+                'products' => $products,
+            ]);
         }
 
         return view('inventory_movements.index');
@@ -68,30 +107,52 @@ class InventoryMovementController extends Controller
             'items.*.unit_cost' => ['nullable', 'numeric', 'min:0'],
         ]);
 
+        $validator->after(function ($validator) use ($request) {
+            $items = $request->input('items', []);
+            $productIds = collect($items)
+                ->pluck('product_id')
+                ->filter()
+                ->map(fn ($id) => (int) $id);
+
+            if ($productIds->count() !== $productIds->unique()->count()) {
+                $validator->errors()->add('items', 'Cada producto solo puede agregarse una vez por movimiento.');
+            }
+        });
+
         $validated = $validator->validate();
 
         $items = Arr::pull($validated, 'items', []);
 
-        $movement = DB::transaction(function () use ($validated, $items, $request) {
-            $movementData = $validated;
-            $movementData['user_id'] = $request->user()?->id;
+        try {
+            $movement = DB::transaction(function () use ($validated, $items, $request) {
+                $movementData = $validated;
+                $movementData['user_id'] = $request->user()?->id;
+                $movementData['moved_at'] = $movementData['moved_at'] ?? now();
 
-            $movement = InventoryMovement::create($movementData);
+                $movement = InventoryMovement::create($movementData);
 
-            foreach ($items as $item) {
-                $detail = new InventoryMovementDetail([
-                    'product_id' => $item['product_id'],
-                    'qty' => $item['qty'],
-                    'unit_cost' => $item['unit_cost'] ?? 0,
-                ]);
+                foreach ($items as $item) {
+                    $detail = new InventoryMovementDetail([
+                        'product_id' => $item['product_id'],
+                        'qty' => $item['qty'],
+                        'unit_cost' => $item['unit_cost'] ?? 0,
+                    ]);
 
-                $movement->details()->save($detail);
+                    $movement->details()->save($detail);
 
-                $this->applyStockChanges($movement, $item);
-            }
+                    $this->applyStockChanges($movement, $item);
+                }
 
-            return $movement->load(['details.product', 'originWarehouse', 'targetWarehouse']);
-        });
+                return $movement->load(['details.product', 'originWarehouse', 'targetWarehouse']);
+            });
+        } catch (DomainException $exception) {
+            return response()->json([
+                'message' => $exception->getMessage(),
+                'errors' => [
+                    'items' => [$exception->getMessage()],
+                ],
+            ], 422);
+        }
 
         return response()->json($movement, 201);
     }
