@@ -32,6 +32,8 @@ class CustomerController extends Controller
             'phone' => ['nullable', 'string', 'max:30'],
             'address' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'string', 'email', 'max:120', 'unique:customers,email'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
         ]);
 
         $customer = Customer::create($data);
@@ -58,6 +60,8 @@ class CustomerController extends Controller
                 'max:120',
                 Rule::unique('customers', 'email')->ignore($customer->id),
             ],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
         ]);
 
         $customer->update($data);

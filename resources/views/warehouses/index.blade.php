@@ -30,6 +30,16 @@
             <input id="code" name="code" class="form-control" autocomplete="off">
             <div id="codeFeedback" class="invalid-feedback"></div>
           </div>
+          <div class="mb-3">
+            <label for="latitude" class="form-label">Latitud</label>
+            <input id="latitude" name="latitude" type="number" step="0.000001" class="form-control" autocomplete="off">
+            <div id="latitudeFeedback" class="invalid-feedback"></div>
+          </div>
+          <div class="mb-3">
+            <label for="longitude" class="form-label">Longitud</label>
+            <input id="longitude" name="longitude" type="number" step="0.000001" class="form-control" autocomplete="off">
+            <div id="longitudeFeedback" class="invalid-feedback"></div>
+          </div>
           <div class="form-check">
             <input id="is_route" name="is_route" class="form-check-input" type="checkbox" value="1">
             <label class="form-check-label" for="is_route">¿Es almacén en ruta?</label>

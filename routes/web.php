@@ -40,6 +40,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('stocks', StockController::class)->only(['index']);
     Route::resource('inventory-movements', InventoryMovementController::class)->only(['index', 'store', 'show', 'destroy']);
     Route::get('deliveries', [DeliveryRouteController::class, 'index'])->name('deliveries.index');
+    Route::post('delivery-routes', [DeliveryRouteController::class, 'store'])->name('delivery-routes.store');
+    Route::get('delivery-routes/{deliveryRoute}', [DeliveryRouteController::class, 'show'])->name('delivery-routes.show');
     Route::resource('orders', OrderController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
     Route::patch('/orders/{order}/payment-status', [OrderPaymentStatusController::class, 'update'])
         ->name('orders.payment-status.update');

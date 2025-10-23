@@ -14,5 +14,12 @@ class Customer extends Model
         'phone',
         'address',
         'email',
+        'latitude',
+        'longitude',
+    ];
+
+    protected $casts = [
+        'latitude' => 'decimal:7',
+        'longitude' => 'decimal:7',
     ];
 }

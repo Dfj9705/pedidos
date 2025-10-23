@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DeliveryRoute;
 use App\Models\InventoryMovement;
 use App\Models\Order;
 use App\Models\Warehouse;
@@ -25,7 +26,10 @@ class OrderDeliveryController extends Controller
         $validated = $request->validate([
             'warehouse_id' => ['nullable', 'exists:warehouses,id'],
             'moved_at' => ['nullable', 'date'],
+            'delivery_route_id' => ['nullable', 'exists:delivery_routes,id'],
         ]);
+
+        $deliveryRoute = $this->findDeliveryRouteForOrder($order, $validated['delivery_route_id'] ?? null);
 
         if ($order->status === 'delivered') {
             throw ValidationException::withMessages([
@@ -45,7 +49,7 @@ class OrderDeliveryController extends Controller
             ]);
         }
 
-        $warehouse = $this->resolveWarehouse($validated['warehouse_id'] ?? null);
+        $warehouse = $this->resolveWarehouse($validated['warehouse_id'] ?? $deliveryRoute?->warehouse_id);
 
         if (! $warehouse) {
             throw ValidationException::withMessages([
@@ -60,7 +64,7 @@ class OrderDeliveryController extends Controller
         $order->loadMissing(['items.product']);
 
         try {
-            $movement = DB::transaction(function () use ($order, $warehouse, $movedAt, $request) {
+            $movement = DB::transaction(function () use ($order, $warehouse, $movedAt, $request, $deliveryRoute) {
                 $movement = InventoryMovement::create([
                     'code' => $this->generateMovementCode(),
                     'type' => 'out',
@@ -96,6 +100,8 @@ class OrderDeliveryController extends Controller
                     'status' => 'delivered',
                     'delivered_at' => $movedAt,
                 ]);
+
+                $this->updateRouteDeliveryState($order, $request, $movedAt, $deliveryRoute);
 
                 return $movement;
             });
@@ -147,6 +153,81 @@ class OrderDeliveryController extends Controller
         } while (InventoryMovement::where('code', $code)->exists());
 
         return $code;
+    }
+
+    private function findDeliveryRouteForOrder(Order $order, ?int $routeId): ?DeliveryRoute
+    {
+        $query = DeliveryRoute::query()
+            ->whereIn('status', ['planned', 'in_progress'])
+            ->whereHas('orders', function ($ordersQuery) use ($order) {
+                $ordersQuery->where('orders.id', $order->id);
+            });
+
+        if ($routeId) {
+            $query->where('id', $routeId);
+        }
+
+        $route = $query->first();
+
+        if ($routeId && ! $route) {
+            throw ValidationException::withMessages([
+                'delivery_route_id' => ['La ruta de entrega seleccionada no contiene este pedido o ya fue completada.'],
+            ]);
+        }
+
+        return $route;
+    }
+
+    private function updateRouteDeliveryState(Order $order, Request $request, Carbon $deliveredAt, ?DeliveryRoute $route = null): void
+    {
+        if (! $route) {
+            $route = $order->deliveryRoutes()
+                ->whereIn('delivery_routes.status', ['planned', 'in_progress'])
+                ->first();
+        }
+
+        if (! $route) {
+            return;
+        }
+
+        $orderExists = $route->orders()
+            ->where('orders.id', $order->id)
+            ->exists();
+
+        if (! $orderExists) {
+            return;
+        }
+
+        $route->orders()->updateExistingPivot($order->id, [
+            'delivered_at' => $deliveredAt,
+            'delivered_by' => $request->user()?->id,
+        ]);
+
+        $updates = [];
+
+        if ($route->status === 'planned') {
+            $updates['status'] = 'in_progress';
+        }
+
+        if (! $route->started_at) {
+            $updates['started_at'] = $deliveredAt;
+        }
+
+        if (! empty($updates)) {
+            $route->fill($updates);
+            $route->save();
+        }
+
+        $hasPending = $route->orders()
+            ->whereNull('delivery_route_order.delivered_at')
+            ->exists();
+
+        if (! $hasPending) {
+            $route->update([
+                'status' => 'completed',
+                'completed_at' => $deliveredAt,
+            ]);
+        }
     }
 
     private function formatDecimal(float|int|string $value): string

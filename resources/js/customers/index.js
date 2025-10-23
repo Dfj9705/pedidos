@@ -20,6 +20,8 @@ const inputName = document.getElementById('name')
 const inputPhone = document.getElementById('phone')
 const inputEmail = document.getElementById('email')
 const inputAddress = document.getElementById('address')
+const inputLatitude = document.getElementById('latitude')
+const inputLongitude = document.getElementById('longitude')
 
 btnUpdate.style.display = 'none'
 btnUpdate.disabled = true
@@ -50,7 +52,7 @@ const dt = new DataTable('#customerTable', {
             className: 'text-center',
             render: (id, type, row) => `
         <div class="btn-group" role="group">
-          <button class="btn btn-sm btn-warning btn-edit" data-id="${id}" data-name="${encodeURIComponent(row.name ?? '')}" data-phone="${encodeURIComponent(row.phone ?? '')}" data-email="${encodeURIComponent(row.email ?? '')}" data-address="${encodeURIComponent(row.address ?? '')}" data-bs-toggle="modal" data-bs-target="#modalCustomer">
+          <button class="btn btn-sm btn-warning btn-edit" data-id="${id}" data-name="${encodeURIComponent(row.name ?? '')}" data-phone="${encodeURIComponent(row.phone ?? '')}" data-email="${encodeURIComponent(row.email ?? '')}" data-address="${encodeURIComponent(row.address ?? '')}" data-latitude="${encodeURIComponent(row.latitude ?? '')}" data-longitude="${encodeURIComponent(row.longitude ?? '')}" data-bs-toggle="modal" data-bs-target="#modalCustomer">
             <i class="bi bi-pencil"></i>
           </button>
           <button class="btn btn-sm btn-danger btn-delete" data-id="${id}">
@@ -152,6 +154,8 @@ function setCreateState() {
     spinnerSave.style.display = 'none'
     clearValidation()
     formCustomer.reset()
+    if (inputLatitude) inputLatitude.value = ''
+    if (inputLongitude) inputLongitude.value = ''
 }
 
 function editCustomer(e) {
@@ -170,6 +174,8 @@ function editCustomer(e) {
     inputPhone.value = decodeURIComponent(btn.dataset.phone || '')
     inputEmail.value = decodeURIComponent(btn.dataset.email || '')
     inputAddress.value = decodeURIComponent(btn.dataset.address || '')
+    inputLatitude.value = decodeURIComponent(btn.dataset.latitude || '')
+    inputLongitude.value = decodeURIComponent(btn.dataset.longitude || '')
 }
 
 async function updateCustomer(e) {

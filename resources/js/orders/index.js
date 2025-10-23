@@ -1,5 +1,6 @@
 import DataTable from 'datatables.net-bs5'
 import 'datatables.net-responsive-bs5'
+import Swal from 'sweetalert2'
 import { Toast } from '../app'
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -99,7 +100,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!orderId) return
 
         const markPaid = async () => {
-            if (!window.confirm('¿Deseas marcar este pedido como pagado?')) {
+            const result = await Swal.fire({
+                icon: 'question',
+                title: 'Marcar pedido como pagado',
+                text: '¿Deseas marcar este pedido como pagado?',
+                confirmButtonText: 'Sí, marcar',
+                cancelButtonText: 'Cancelar',
+                showCancelButton: true,
+                confirmButtonColor: '#198754'
+            })
+
+            if (!result.isConfirmed) {
                 return
             }
 
