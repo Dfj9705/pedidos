@@ -182,9 +182,9 @@ if (formProduct && tableElement && modalElement) {
         inputSku.value = decodeURIComponent(data.sku || '')
         inputName.value = decodeURIComponent(data.name || '')
         inputDescription.value = decodeURIComponent(data.description || '')
-        inputCost.value = formatDecimal(data.cost)
-        inputPrice.value = formatDecimal(data.price)
-        inputMinStock.value = formatDecimal(data.minStock)
+        inputCost.value = formatIntegerValue(data.cost)
+        inputPrice.value = formatIntegerValue(data.price)
+        inputMinStock.value = formatIntegerValue(data.minStock)
         inputIsActive.checked = data.isActive === '1'
     }
 
@@ -351,4 +351,10 @@ function formatDecimal(value) {
     const numeric = Number(value)
     if (!Number.isFinite(numeric)) return '0.0000'
     return numeric.toFixed(4)
+}
+
+function formatIntegerValue(value, min = 0) {
+    const numeric = Number(value)
+    if (!Number.isFinite(numeric)) return String(min)
+    return String(Math.max(min, Math.round(numeric)))
 }

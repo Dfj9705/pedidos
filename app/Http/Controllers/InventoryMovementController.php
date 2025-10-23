@@ -103,7 +103,7 @@ class InventoryMovementController extends Controller
             'notes' => ['nullable', 'string'],
             'items' => ['required', 'array', 'min:1'],
             'items.*.product_id' => ['required', 'exists:products,id'],
-            'items.*.qty' => ['required', 'numeric', 'min:0.0001'],
+            'items.*.qty' => ['required', 'numeric', 'min:1'],
             'items.*.unit_cost' => ['nullable', 'numeric', 'min:0'],
         ]);
 

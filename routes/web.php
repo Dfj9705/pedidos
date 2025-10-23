@@ -3,9 +3,11 @@
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DeliveryRouteController;
 use App\Http\Controllers\InventoryMovementController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderDeliveryController;
+use App\Http\Controllers\OrderPaymentStatusController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\WarehouseController;
@@ -37,7 +39,10 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('products', ProductController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('stocks', StockController::class)->only(['index']);
     Route::resource('inventory-movements', InventoryMovementController::class)->only(['index', 'store', 'show', 'destroy']);
+    Route::get('deliveries', [DeliveryRouteController::class, 'index'])->name('deliveries.index');
     Route::resource('orders', OrderController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
+    Route::patch('/orders/{order}/payment-status', [OrderPaymentStatusController::class, 'update'])
+        ->name('orders.payment-status.update');
     Route::post('/orders/{order}/deliver', [OrderDeliveryController::class, 'deliver'])
         ->name('orders.deliver');
 });

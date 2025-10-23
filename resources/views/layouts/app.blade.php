@@ -84,6 +84,12 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a @class(['nav-link', 'active' => request()->routeIs('deliveries.*')]) href="{{ route('deliveries.index') }}">
+                                    <i class="bi bi-truck"></i>
+                                    <span>{{ __('Entregas') }}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a @class(['nav-link', 'active' => request()->routeIs('orders.*')]) href="{{ route('orders.index') }}">
                                     <i class="bi bi-bag-check"></i>
                                     <span>{{ __('Pedidos') }}</span>

@@ -14,6 +14,13 @@ const parseNumber = (value, fallback = 0) => {
     return Number.isFinite(numeric) ? numeric : fallback
 }
 
+const formatIntegerValue = (value, min = 0) => {
+    const numeric = Number(value)
+    if (!Number.isFinite(numeric)) return String(min)
+    const normalized = Math.max(min, Math.round(numeric))
+    return String(normalized)
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('[data-order-form]')
     if (!form) return
@@ -110,15 +117,15 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="invalid-feedback" data-feedback="product_id"></div>
       </td>
       <td>
-        <input type="number" step="0.0001" min="0.0001" class="form-control form-control-sm text-end" name="items[${rowKey}][qty]" value="1" data-field="qty">
+        <input type="number" step="1" min="1" class="form-control form-control-sm text-end" name="items[${rowKey}][qty]" value="1" data-field="qty">
         <div class="invalid-feedback" data-feedback="qty"></div>
       </td>
       <td>
-        <input type="number" step="0.0001" min="0" class="form-control form-control-sm text-end" name="items[${rowKey}][price]" value="0.0000" data-field="price">
+        <input type="number" step="1" min="0" class="form-control form-control-sm text-end" name="items[${rowKey}][price]" value="0" data-field="price">
         <div class="invalid-feedback" data-feedback="price"></div>
       </td>
       <td>
-        <input type="number" step="0.0001" min="0" class="form-control form-control-sm text-end" name="items[${rowKey}][discount]" value="0.0000" data-field="discount">
+        <input type="number" step="1" min="0" class="form-control form-control-sm text-end" name="items[${rowKey}][discount]" value="0" data-field="discount">
         <div class="invalid-feedback" data-feedback="discount"></div>
       </td>
       <td class="text-end"><span data-line-total>0.0000</span></td>
@@ -187,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const product = getActiveProducts().find((item) => String(item.id) === select.value)
         const priceInput = row?.querySelector('[data-field="price"]')
         if (product && priceInput) {
-            priceInput.value = formatDecimal(product.price)
+            priceInput.value = formatIntegerValue(product.price ?? 0, 0)
         }
         updateLineTotal(row)
         recalculateSummary()
