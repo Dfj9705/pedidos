@@ -8,6 +8,15 @@ import Swal from 'sweetalert2'
 import { Modal } from 'bootstrap'
 import { Toast } from '../app'
 
+const formatCoordinate = (value) => {
+    if (value === null || value === undefined || value === '') {
+        return '—'
+    }
+
+    const numeric = Number(value)
+    return Number.isFinite(numeric) ? numeric.toFixed(6) : String(value)
+}
+
 const formCustomer = document.querySelector('#formCustomer')
 const modalEl = document.getElementById('modalCustomer')
 const modalCustomer = new Modal(modalEl)
@@ -45,6 +54,18 @@ const dt = new DataTable('#customerTable', {
         { title: 'Teléfono', data: 'phone', defaultContent: '' },
         { title: 'Correo electrónico', data: 'email', defaultContent: '' },
         { title: 'Dirección', data: 'address', defaultContent: '' },
+        {
+            title: 'Latitud',
+            data: 'latitude',
+            className: 'text-end',
+            render: (value) => formatCoordinate(value)
+        },
+        {
+            title: 'Longitud',
+            data: 'longitude',
+            className: 'text-end',
+            render: (value) => formatCoordinate(value)
+        },
         {
             title: 'Opciones',
             data: 'id',

@@ -8,6 +8,15 @@ import Swal from 'sweetalert2'
 import { Modal } from 'bootstrap'
 import { Toast } from '../app'
 
+const formatCoordinate = (value) => {
+    if (value === null || value === undefined || value === '') {
+        return '—'
+    }
+
+    const numeric = Number(value)
+    return Number.isFinite(numeric) ? numeric.toFixed(6) : String(value)
+}
+
 const formWarehouse = document.querySelector('#formWarehouse')
 const modalEl = document.getElementById('modalWarehouse')
 const modalWarehouse = new Modal(modalEl)
@@ -48,6 +57,18 @@ const dt = new DataTable('#warehouseTable', {
             className: 'text-center',
             render: (value) => (value ? 'Sí' : 'No'),
             width: '90px'
+        },
+        {
+            title: 'Latitud',
+            data: 'latitude',
+            render: (value) => formatCoordinate(value),
+            className: 'text-end',
+        },
+        {
+            title: 'Longitud',
+            data: 'longitude',
+            render: (value) => formatCoordinate(value),
+            className: 'text-end',
         },
         {
             title: 'Opciones',
