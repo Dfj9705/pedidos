@@ -1,22 +1,20 @@
 import DataTable from 'datatables.net-bs5'
 import 'datatables.net-responsive-bs5'
 import Swal from 'sweetalert2'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
+import markerIcon2xUrl from 'leaflet/dist/images/marker-icon-2x.png'
+import markerIconUrl from 'leaflet/dist/images/marker-icon.png'
+import markerShadowUrl from 'leaflet/dist/images/marker-shadow.png'
 import { Toast } from '../app'
 
-let leafletLib = null
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2xUrl,
+  iconUrl: markerIconUrl,
+  shadowUrl: markerShadowUrl
+})
 
-const getLeaflet = () => {
-  if (leafletLib) {
-    return leafletLib
-  }
-
-  if (typeof window !== 'undefined' && window.L) {
-    leafletLib = window.L
-    return leafletLib
-  }
-
-  return null
-}
+const getLeaflet = () => L
 
 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
 
