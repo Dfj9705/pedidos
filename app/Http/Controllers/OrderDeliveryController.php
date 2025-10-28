@@ -15,12 +15,27 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Controller responsible for processing order deliveries.
+ */
 class OrderDeliveryController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @param  StockService  $stockService
+     */
     public function __construct(private readonly StockService $stockService)
     {
     }
 
+    /**
+     * Mark an order as delivered and create the corresponding stock movement.
+     *
+     * @param  Order  $order
+     * @param  Request  $request
+     * @return JsonResponse
+     */
     public function deliver(Order $order, Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -119,6 +134,12 @@ class OrderDeliveryController extends Controller
         ]);
     }
 
+    /**
+     * Resolve the warehouse that should be used for the delivery.
+     *
+     * @param  int|null  $warehouseId
+     * @return Warehouse|null
+     */
     private function resolveWarehouse(?int $warehouseId): ?Warehouse
     {
         if ($warehouseId) {
@@ -146,6 +167,11 @@ class OrderDeliveryController extends Controller
         return $warehouse;
     }
 
+    /**
+     * Generate a unique code for the inventory movement.
+     *
+     * @return string
+     */
     private function generateMovementCode(): string
     {
         do {
@@ -155,6 +181,13 @@ class OrderDeliveryController extends Controller
         return $code;
     }
 
+    /**
+     * Find the delivery route associated with an order.
+     *
+     * @param  Order  $order
+     * @param  int|null  $routeId
+     * @return DeliveryRoute|null
+     */
     private function findDeliveryRouteForOrder(Order $order, ?int $routeId): ?DeliveryRoute
     {
         $query = DeliveryRoute::query()
@@ -178,6 +211,15 @@ class OrderDeliveryController extends Controller
         return $route;
     }
 
+    /**
+     * Update delivery route state based on the delivered order.
+     *
+     * @param  Order  $order
+     * @param  Request  $request
+     * @param  Carbon  $deliveredAt
+     * @param  DeliveryRoute|null  $route
+     * @return void
+     */
     private function updateRouteDeliveryState(Order $order, Request $request, Carbon $deliveredAt, ?DeliveryRoute $route = null): void
     {
         if (! $route) {
@@ -230,6 +272,12 @@ class OrderDeliveryController extends Controller
         }
     }
 
+    /**
+     * Format a decimal value with four decimal places.
+     *
+     * @param  float|int|string  $value
+     * @return string
+     */
     private function formatDecimal(float|int|string $value): string
     {
         return number_format((float) $value, 4, '.', '');

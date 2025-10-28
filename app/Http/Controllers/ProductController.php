@@ -8,8 +8,17 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
+/**
+ * Controller responsible for managing products.
+ */
 class ProductController extends Controller
 {
+    /**
+     * Display a listing of products or render the index view.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
     public function index(Request $request)
     {
         if ($request->expectsJson()) {
@@ -56,6 +65,12 @@ class ProductController extends Controller
         return view('products.index');
     }
 
+    /**
+     * Store a newly created product in storage.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -107,6 +122,13 @@ class ProductController extends Controller
         ], 201);
     }
 
+    /**
+     * Update the specified product in storage.
+     *
+     * @param  Request  $request
+     * @param  Product  $product
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(Request $request, Product $product)
     {
         $data = $request->validate([
@@ -163,6 +185,12 @@ class ProductController extends Controller
         ], 200);
     }
 
+    /**
+     * Remove the specified product from storage.
+     *
+     * @param  Product  $product
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy(Product $product)
     {
         $product->delete();
@@ -172,11 +200,23 @@ class ProductController extends Controller
         ]);
     }
 
+    /**
+     * Format a decimal value with four decimal places.
+     *
+     * @param  float|int|string|null  $value
+     * @return string
+     */
     private function formatDecimal(float|int|string|null $value): string
     {
         return number_format((float) ($value ?? 0), 4, '.', '');
     }
 
+    /**
+     * Resolve whether the product should be marked as active.
+     *
+     * @param  Request  $request
+     * @return bool
+     */
     private function resolveActiveState(Request $request): bool
     {
         return $request->has('is_active') ? $request->boolean('is_active') : true;

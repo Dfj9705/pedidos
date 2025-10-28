@@ -11,8 +11,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Controller responsible for handling CRUD operations for orders.
+ */
 class OrderController extends Controller
 {
+    /**
+     * Display a listing of orders or render the index view.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
     public function index(Request $request)
     {
         if ($request->expectsJson()) {
@@ -70,6 +79,12 @@ class OrderController extends Controller
         return view('orders.index');
     }
 
+    /**
+     * Store a newly created order in storage.
+     *
+     * @param  OrderStoreRequest  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(OrderStoreRequest $request)
     {
         $validated = $request->validated();
@@ -116,6 +131,12 @@ class OrderController extends Controller
         ], 201);
     }
 
+    /**
+     * Display the specified order.
+     *
+     * @param  Order  $order
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show(Order $order)
     {
         $order->load(['customer:id,name', 'items.product:id,name', 'payments']);
@@ -129,6 +150,13 @@ class OrderController extends Controller
         ]);
     }
 
+    /**
+     * Update the specified order in storage.
+     *
+     * @param  OrderUpdateRequest  $request
+     * @param  Order  $order
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(OrderUpdateRequest $request, Order $order)
     {
         $validated = $request->validated();
@@ -172,6 +200,12 @@ class OrderController extends Controller
         ]);
     }
 
+    /**
+     * Remove the specified order from storage.
+     *
+     * @param  Order  $order
+     * @return \Illuminate\Http\Response
+     */
     public function destroy(Order $order)
     {
         $order->delete();
@@ -179,6 +213,12 @@ class OrderController extends Controller
         return response()->noContent();
     }
 
+    /**
+     * Build an item collection using normalized numeric values.
+     *
+     * @param  array<int, array<string, mixed>>  $items
+     * @return Collection<int, array<string, float|int>>
+     */
     private function buildItemCollection(array $items): Collection
     {
         return collect($items)->map(function (array $item) {
@@ -196,6 +236,12 @@ class OrderController extends Controller
         });
     }
 
+    /**
+     * Format a decimal value using the application precision.
+     *
+     * @param  float|int|string  $value
+     * @return string
+     */
     private function formatDecimal(float|int|string $value): string
     {
         return number_format((float) $value, 4, '.', '');

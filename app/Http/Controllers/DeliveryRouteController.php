@@ -11,8 +11,17 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Controller responsible for managing delivery routes.
+ */
 class DeliveryRouteController extends Controller
 {
+    /**
+     * Display a listing of delivery routes or render the index view.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
     public function index(Request $request)
     {
         if ($request->expectsJson()) {
@@ -82,6 +91,12 @@ class DeliveryRouteController extends Controller
         return view('deliveries.index');
     }
 
+    /**
+     * Store a newly planned delivery route.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -186,6 +201,12 @@ class DeliveryRouteController extends Controller
         ], 201);
     }
 
+    /**
+     * Display the specified delivery route.
+     *
+     * @param  DeliveryRoute  $deliveryRoute
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show(DeliveryRoute $deliveryRoute)
     {
         return response()->json([
@@ -193,6 +214,12 @@ class DeliveryRouteController extends Controller
         ]);
     }
 
+    /**
+     * Format an order for selection on delivery route planning.
+     *
+     * @param  Order  $order
+     * @return array<string, mixed>
+     */
     private function formatSelectableOrder(Order $order): array
     {
         return [
@@ -211,6 +238,12 @@ class DeliveryRouteController extends Controller
         ];
     }
 
+    /**
+     * Format a delivery route payload for API responses.
+     *
+     * @param  DeliveryRoute  $route
+     * @return array<string, mixed>
+     */
     private function formatRoute(DeliveryRoute $route): array
     {
         $route->loadMissing([
@@ -268,6 +301,12 @@ class DeliveryRouteController extends Controller
         ];
     }
 
+    /**
+     * Resolve the warehouse that should be used for the route.
+     *
+     * @param  int|null  $warehouseId
+     * @return Warehouse|null
+     */
     private function resolveWarehouse(?int $warehouseId): ?Warehouse
     {
         if ($warehouseId) {
@@ -295,6 +334,11 @@ class DeliveryRouteController extends Controller
         return $warehouse;
     }
 
+    /**
+     * Generate a unique code for a delivery route.
+     *
+     * @return string
+     */
     private function generateRouteCode(): string
     {
         do {

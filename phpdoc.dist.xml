@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpdocumentor configVersion="3">
+    <title>Pedidos Documentation</title>
+    <paths>
+        <output>./docs/phpdoc</output>
+        <cache>./storage/framework/cache/data/phpdoc</cache>
+    </paths>
+    <version number="latest">
+        <api>
+            <source dsn="./app" />
+            <output>api</output>
+        </api>
+    </version>
+    <setting name="defaultPackageName" value="Pedidos" />
+</phpdocumentor>

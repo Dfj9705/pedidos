@@ -5,10 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 
+/**
+ * Controller placeholder for order item resources.
+ */
 class OrderItemController extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
+     * @return void
      */
     public function index()
     {
@@ -17,6 +22,8 @@ class OrderItemController extends Controller
 
     /**
      * Show the form for creating a new resource.
+     *
+     * @return void
      */
     public function create()
     {
@@ -25,6 +32,9 @@ class OrderItemController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     *
+     * @param  Request  $request
+     * @return void
      */
     public function store(Request $request)
     {
@@ -33,6 +43,9 @@ class OrderItemController extends Controller
 
     /**
      * Display the specified resource.
+     *
+     * @param  OrderItem  $orderItem
+     * @return void
      */
     public function show(OrderItem $orderItem)
     {
@@ -41,6 +54,9 @@ class OrderItemController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     *
+     * @param  OrderItem  $orderItem
+     * @return void
      */
     public function edit(OrderItem $orderItem)
     {
@@ -49,6 +65,10 @@ class OrderItemController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
+     * @param  Request  $request
+     * @param  OrderItem  $orderItem
+     * @return void
      */
     public function update(Request $request, OrderItem $orderItem)
     {
@@ -57,6 +77,9 @@ class OrderItemController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @param  OrderItem  $orderItem
+     * @return void
      */
     public function destroy(OrderItem $orderItem)
     {

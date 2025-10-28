@@ -6,8 +6,18 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
+/**
+ * Controller responsible for updating order payment statuses.
+ */
 class OrderPaymentStatusController extends Controller
 {
+    /**
+     * Update the payment status for the specified order.
+     *
+     * @param  Request  $request
+     * @param  Order  $order
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(Request $request, Order $order)
     {
         $validated = $request->validate([
