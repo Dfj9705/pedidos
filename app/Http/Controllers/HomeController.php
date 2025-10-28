@@ -10,12 +10,13 @@ use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Support\Carbon;
 
+/**
+ * Controller responsible for the dashboard home page.
+ */
 class HomeController extends Controller
 {
     /**
      * Create a new controller instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -23,7 +24,9 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * Display the application dashboard with aggregated metrics.
+     *
+     * @return \Illuminate\View\View
      */
     public function index()
     {

@@ -6,10 +6,16 @@ use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
+/**
+ * Controller responsible for managing customers.
+ */
 class CustomerController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of customers or render the index view.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
      */
     public function index(Request $request)
     {
@@ -23,7 +29,10 @@ class CustomerController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created customer in storage.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -45,7 +54,11 @@ class CustomerController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified customer in storage.
+     *
+     * @param  Request  $request
+     * @param  Customer  $customer
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, Customer $customer)
     {
@@ -73,7 +86,10 @@ class CustomerController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified customer from storage.
+     *
+     * @param  Customer  $customer
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Customer $customer)
     {

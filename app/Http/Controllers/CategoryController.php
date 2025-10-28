@@ -6,8 +6,17 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
+/**
+ * Controller responsible for managing product categories.
+ */
 class CategoryController extends Controller
 {
+    /**
+     * Display a listing of categories or render the index view.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
     public function index(Request $request)
     {
         if ($request->expectsJson()) {
@@ -18,6 +27,12 @@ class CategoryController extends Controller
         return view('categories.index');
     }
 
+    /**
+     * Store a newly created category in storage.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -33,6 +48,13 @@ class CategoryController extends Controller
         ], 200);
     }
 
+    /**
+     * Update the specified category in storage.
+     *
+     * @param  Request  $request
+     * @param  Category  $category
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(Request $request, Category $category)
     {
         $data = $request->validate([
@@ -53,6 +75,12 @@ class CategoryController extends Controller
         ], 200);
     }
 
+    /**
+     * Remove the specified category from storage.
+     *
+     * @param  Category  $category
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy(Category $category)
     {
         $category->delete();

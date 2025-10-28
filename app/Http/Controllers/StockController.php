@@ -5,8 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Stock;
 use Illuminate\Http\Request;
 
+/**
+ * Controller responsible for displaying stock levels.
+ */
 class StockController extends Controller
 {
+    /**
+     * Display a listing of stock entries or render the index view.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
     public function index(Request $request)
     {
         $query = Stock::query()

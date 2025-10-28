@@ -16,12 +16,26 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
+/**
+ * Controller responsible for managing inventory movements.
+ */
 class InventoryMovementController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @param  StockService  $stockService
+     */
     public function __construct(private readonly StockService $stockService)
     {
     }
 
+    /**
+     * Display a listing of inventory movements or render the index view.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
     public function index(Request $request)
     {
         if ($request->expectsJson()) {
@@ -84,6 +98,12 @@ class InventoryMovementController extends Controller
         return view('inventory_movements.index');
     }
 
+    /**
+     * Store a newly created inventory movement in storage.
+     *
+     * @param  Request  $request
+     * @return JsonResponse
+     */
     public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
@@ -157,6 +177,12 @@ class InventoryMovementController extends Controller
         return response()->json($movement, 201);
     }
 
+    /**
+     * Display the specified inventory movement.
+     *
+     * @param  InventoryMovement  $inventoryMovement
+     * @return JsonResponse
+     */
     public function show(InventoryMovement $inventoryMovement): JsonResponse
     {
         $inventoryMovement->load(['details.product', 'originWarehouse', 'targetWarehouse']);
@@ -164,6 +190,12 @@ class InventoryMovementController extends Controller
         return response()->json($inventoryMovement);
     }
 
+    /**
+     * Remove the specified inventory movement from storage.
+     *
+     * @param  InventoryMovement  $inventoryMovement
+     * @return Response
+     */
     public function destroy(InventoryMovement $inventoryMovement): Response
     {
         $inventoryMovement->delete();
@@ -171,6 +203,13 @@ class InventoryMovementController extends Controller
         return response()->noContent();
     }
 
+    /**
+     * Apply stock changes based on the movement type and item details.
+     *
+     * @param  InventoryMovement  $movement
+     * @param  array<string, mixed>  $item
+     * @return void
+     */
     private function applyStockChanges(InventoryMovement $movement, array $item): void
     {
         $qty = (float) $item['qty'];

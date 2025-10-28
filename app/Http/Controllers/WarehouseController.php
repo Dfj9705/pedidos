@@ -6,10 +6,16 @@ use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
+/**
+ * Controller responsible for managing warehouses.
+ */
 class WarehouseController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of warehouses or render the index view.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
      */
     public function index(Request $request)
     {
@@ -23,7 +29,10 @@ class WarehouseController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created warehouse in storage.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -46,7 +55,11 @@ class WarehouseController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified warehouse in storage.
+     *
+     * @param  Request  $request
+     * @param  Warehouse  $warehouse
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, Warehouse $warehouse)
     {
@@ -74,7 +87,10 @@ class WarehouseController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified warehouse from storage.
+     *
+     * @param  Warehouse  $warehouse
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Warehouse $warehouse)
     {
